@@ -14,16 +14,27 @@ class _HomeScreenState extends State<HomeScreen> {
     "Switch 4",
   ];
 
-  void connectBluetooth() {
+  void connectBluetooth() async {
     FlutterBlue flutterBlue = FlutterBlue.instance;
-    flutterBlue.startScan(timeout: Duration(seconds: 4));
+    bool isOn = await flutterBlue.isOn;
 
-    flutterBlue.scanResults.listen((results) {
-      for (ScanResult r in results) {
-        print('${r.device.name} found! rssi: ${r.rssi}');
-      }
-    });
-    flutterBlue.stopScan();
+    List<BluetoothDevice> availableDevices = [];
+    if (isOn) {
+      flutterBlue.startScan(timeout: Duration(seconds: 1));
+      flutterBlue.scanResults.listen((results) {
+        for (ScanResult r in results) {
+          if (r.device.name != "" && !availableDevices.contains(r.device)) {
+            availableDevices.add(r.device);
+          }
+        }
+      });
+      await Future.delayed(Duration(seconds: 2));
+      availableDevices.forEach(
+        (element) {
+          print(element.name);
+        },
+      );
+    }
   }
 
   @override
