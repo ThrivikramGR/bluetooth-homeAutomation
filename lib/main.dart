@@ -12,6 +12,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'BLE_HoAt',
       initialRoute: "/",
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
       routes: {
         "/": (context) => HomeScreen(),
       },
